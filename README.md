@@ -195,3 +195,11 @@ The previews show the HUD with simulated vehicle data against a neutral test bac
 ### Indicator and warning lamps
 
 Vehicle HUDs show turn signals, headlight status, a seat belt warning, and a siren indicator where applicable. The low fuel or low battery warning comes on below **15%** and starts one sequence of short beeps. Refilling or recharging to at least 15% resets the sound for the next warning. The check-engine lamp reacts to engine damage and fuel system faults reported by the fuel provider. On aircraft, the warning row appears only when a fuel or engine warning is active.
+
+## 💬 Support
+
+Need help, found a bug, or have a question?
+
+Join our Discord server for support!
+
+[![Discord](https://img.shields.io/badge/Discord-Join%20Server-5865F2?logo=discord&logoColor=white)](https://discord.gg/Cxfe2y8TJ)
