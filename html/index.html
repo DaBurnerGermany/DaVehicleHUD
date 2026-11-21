@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="de">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>DaVehicleHUD</title>
+    <link rel="stylesheet" href="hud.css">
+    <script src="hud.js" defer></script>
+</head>
+<body>
+    <audio id="seatbelt-sound" src="audio/seatbelt-warning.mp3" preload="auto"></audio>
+    <main id="hud" aria-label="Fahrzeuganzeige" hidden>
+        <div id="lamp-row" class="lamps" aria-label="Kontrollleuchten">
+            <span id="left-signal" class="lamp signal" title="Blinker links" role="img" aria-label="Blinker links"><span class="lamp-icon arrow" aria-hidden="true"></span></span>
+            <span id="check-engine" class="lamp warning" title="Motorkontrolle" role="img" aria-label="Motorkontrolle"><span class="lamp-icon engine" aria-hidden="true"></span></span>
+            <span id="fuel-warning" class="lamp warning" title="Tankreserve" role="img" aria-label="Tankreserve"><span class="lamp-icon pump" aria-hidden="true"></span></span>
+            <span id="seatbelt-warning" class="lamp warning" title="Sicherheitsgurt" role="img" aria-label="Sicherheitsgurt"><span class="lamp-icon belt" aria-hidden="true"></span></span>
+            <span id="headlights" class="lamp" role="img" aria-label="Licht aus"><span class="lamp-icon headlight" aria-hidden="true"></span></span>
+            <span id="cruise-control" class="lamp" role="img" aria-label="Tempomat" hidden><span class="lamp-icon cruise-icon" aria-hidden="true"></span></span>
+            <span id="siren" class="lamp" role="img" aria-label="Sirene aus" hidden><span class="lamp-icon beacon" aria-hidden="true"></span></span>
+            <span id="right-signal" class="lamp signal" title="Blinker rechts" role="img" aria-label="Blinker rechts"><span class="lamp-icon arrow" aria-hidden="true"></span></span>
+        </div>
+        <div class="speed">
+            <div id="analog-scale" aria-hidden="true"></div>
+            <div id="analog-needle" aria-hidden="true"></div>
+            <span id="speed">0</span><span id="speed-unit" class="unit">km/h</span>
+        </div>
+        <div class="fuel">
+            <div class="fuel-label"><label id="fuel-caption" for="fuel-bar">Tank</label><span id="fuel-value">—</span></div>
+            <progress id="fuel-bar" max="100" hidden></progress>
+            <div id="fuel-dial" aria-hidden="true">
+                <span class="analog-fuel-mark">E</span>
+                <span class="analog-fuel-mark">F</span>
+                <span class="orbit-pump lamp-icon pump"></span>
+            </div>
+        </div>
+        <div class="tachometer">
+            <span id="rpm-caption" aria-hidden="true">U/min</span>
+            <div id="rpm-strip" role="meter" aria-label="Relative Motordrehzahl" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
+            <div class="gear"><span id="gear-caption">Gang</span> <span id="gear-value">—</span></div>
+        </div>
+        <div class="flight-readouts">
+            <div><span id="altitude-caption">Höhe über Grund</span><strong id="altitude-value">—</strong></div>
+            <div><span id="vertical-speed-caption">Vertikal</span><strong id="vertical-speed-value">—</strong></div>
+            <div class="aircraft-readout"><span id="heading-caption">Kurs</span><strong id="heading-value">—</strong></div>
+            <div class="aircraft-readout"><span id="landing-gear-caption">Fahrwerk</span><strong id="landing-gear-value">—</strong></div>
+        </div>
+    </main>
+</body>
+</html>

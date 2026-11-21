@@ -1,0 +1,1914 @@
+body {
+    margin: 0;
+    pointer-events: none;
+    color: #f7f9fc;
+    font: 600 13px Consolas, 'Courier New', monospace;
+}
+
+#hud {
+    position: fixed;
+    right: 4vw;
+    bottom: 5vh;
+    width: clamp(234px, 25vh, 390px);
+    box-sizing: border-box;
+    padding: clamp(12px, 1.25vh, 21px) clamp(14px, 1.4vh, 24px);
+    border: 1px solid var(--hud-border, #4a392d);
+    border-radius: 4px;
+    background: var(--hud-background, rgb(22 18 16 / 81%));
+    box-shadow: 0 6px 20px rgb(0 0 0 / 26%);
+    font-variant-numeric: tabular-nums;
+}
+
+#hud:not([hidden]) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(88px, 36%);
+    align-items: end;
+    gap: clamp(10px, 1.05vh, 17px) 12px;
+}
+
+.speed {
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
+    font-size: clamp(28px, 3.8vh, 58px);
+    font-weight: 750;
+    line-height: 1;
+    letter-spacing: 0.025em;
+    color: var(--hud-text, var(--hud-accent, #ffd07c));
+    text-shadow: 0 0 10px rgb(255 161 61 / 34%);
+}
+
+.lamps {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
+    gap: clamp(4px, 0.45vh, 7px);
+}
+
+.lamp {
+    display: grid;
+    place-items: center;
+    height: clamp(23px, 2.2vh, 36px);
+    border: 1px solid #40332b;
+    border-radius: 2px;
+    background: #181411;
+    color: #8b7868;
+}
+
+.lamp[hidden] {
+    display: none;
+}
+
+#cruise-control.active {
+    color: #9dfbb5;
+    border-color: #497459;
+    background: #203b2e;
+}
+
+.cruise-icon {
+    position: relative;
+    box-sizing: border-box;
+    height: 12px;
+    border: 2px solid currentColor;
+    border-bottom: 0;
+    border-radius: 12px 12px 0 0;
+    background: none;
+}
+
+.cruise-icon::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: calc(50% - 1px);
+    width: 2px;
+    height: 7px;
+    background: currentColor;
+    transform: rotate(42deg);
+    transform-origin: center bottom;
+}
+
+#siren.active {
+    color: #b2daff;
+    border-color: #689dce;
+    background: #203c58;
+    animation: siren-flash 0.8s step-end infinite;
+}
+
+@keyframes siren-flash {
+    50% {
+        color: #ffd2ce;
+        border-color: #e87066;
+        background: #642722;
+    }
+}
+
+.beacon {
+    clip-path: polygon(0 85%, 16% 85%, 26% 42%, 38% 30%, 62% 30%, 74% 42%, 84% 85%, 100% 85%, 100% 100%, 0 100%, 0 85%, 44% 85%, 44% 53%, 34% 85%, 44% 85%);
+}
+
+.lamp-icon {
+    width: 16px;
+    height: 14px;
+    background: currentColor;
+}
+
+@media (min-height: 1250px) {
+    .lamp-icon {
+        scale: 1.2;
+    }
+}
+
+.arrow {
+    clip-path: polygon(0 50%, 48% 0, 48% 27%, 100% 27%, 100% 73%, 48% 73%, 48% 100%);
+}
+
+#right-signal .arrow {
+    transform: scaleX(-1);
+}
+
+.engine {
+    width: 20px;
+    clip-path: polygon(23% 0, 65% 0, 65% 15%, 52% 15%, 52% 26%, 73% 26%, 82% 42%, 88% 42%, 88% 24%, 100% 24%, 100% 86%, 88% 86%, 88% 70%, 79% 70%, 75% 100%, 32% 100%, 18% 75%, 12% 75%, 12% 86%, 0 86%, 0 33%, 12% 33%, 12% 48%, 18% 48%, 27% 26%, 38% 26%, 38% 15%, 23% 15%);
+}
+
+.pump {
+    position: relative;
+    height: 15px;
+    background: none;
+}
+
+.pump::before {
+    content: '';
+    position: absolute;
+    inset: 0 6px 0 0;
+    background: linear-gradient(#181411, #181411) center 2px / 6px 5px no-repeat currentColor;
+    border-radius: 2px 2px 0 0;
+}
+
+.pump::after {
+    content: '';
+    position: absolute;
+    inset: 4px 0 2px 9px;
+    border: 2px solid currentColor;
+    border-top: 0;
+    border-radius: 0 0 3px 3px;
+}
+
+.belt {
+    background:
+        radial-gradient(circle at 42% 18%, currentColor 0 2px, transparent 2.5px),
+        linear-gradient(135deg, transparent 43%, currentColor 44% 57%, transparent 58%);
+    border-bottom: 2px solid currentColor;
+}
+
+.headlight {
+    position: relative;
+    width: 16px;
+    height: 12px;
+    background: none;
+}
+
+.headlight::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 0 8px;
+    border: 1.5px solid currentColor;
+    border-radius: 2px 7px 7px 2px;
+}
+
+.headlight::after {
+    content: '';
+    position: absolute;
+    inset: 2px 10px 1px 0;
+    background: repeating-linear-gradient(currentColor 0 1px, transparent 1px 4px);
+    opacity: 0;
+}
+
+#headlights[data-beam="low"] .headlight::after,
+#headlights[data-beam="high"] .headlight::after {
+    opacity: 1;
+}
+
+#headlights[data-beam="low"] .headlight::after {
+    transform: skewY(-24deg);
+}
+
+#headlights[data-beam="low"] {
+    --beam-icon: #b2ffd1;
+    --beam-border: #68ba86;
+    --beam-background: #204c34;
+}
+
+#headlights[data-beam="high"] {
+    --beam-icon: #b2daff;
+    --beam-border: #689dce;
+    --beam-background: #203c58;
+}
+
+#headlights[data-beam="low"],
+#headlights[data-beam="high"] {
+    color: var(--beam-icon);
+    border-color: var(--beam-border);
+    background: var(--beam-background);
+    box-shadow: inset 0 0 7px color-mix(in srgb, var(--beam-border) 30%, transparent);
+}
+
+#seatbelt-warning.active {
+    color: #ff8578;
+    border-color: #9a4640;
+    background: #452320;
+}
+
+.warning.active {
+    border-color: #9c5e29;
+    background: #492812;
+    color: #ffd07c;
+}
+
+.warning.active .lamp-icon {
+    --blink-opacity: 0.35;
+    animation: blink 1.2s step-end infinite;
+}
+
+.signal.active {
+    border-color: #497459;
+    color: #9dfbb5;
+}
+
+.signals-dim .signal.active .lamp-icon {
+    opacity: 0.25;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .lamp .lamp-icon,
+    #siren.active {
+        animation: none;
+    }
+
+    .signals-dim .signal.active .lamp-icon {
+        opacity: 1;
+    }
+}
+
+@keyframes blink {
+    50% {
+        opacity: var(--blink-opacity, 1);
+    }
+}
+
+.unit,
+.fuel-label {
+    font-size: clamp(11px, 1.02vh, 16px);
+    letter-spacing: normal;
+    color: var(--hud-muted, #b5becb);
+    white-space: nowrap;
+    text-shadow: none;
+}
+
+.fuel {
+    display: grid;
+    gap: 4px;
+    padding-bottom: 2px;
+}
+
+.fuel-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+#fuel-value {
+    color: var(--hud-text, #f7f9fc);
+    font-size: clamp(14px, 1.4vh, 22px);
+}
+
+progress {
+    width: 100%;
+    height: clamp(5px, 0.5vh, 8px);
+    appearance: none;
+}
+
+progress::-webkit-progress-bar {
+    border-radius: 3px;
+    background: var(--hud-track, #363d49);
+}
+
+progress::-webkit-progress-value {
+    border-radius: 3px;
+    background: var(--hud-fuel, var(--hud-accent, #d5dce6));
+}
+
+progress.low::-webkit-progress-value {
+    background: var(--hud-reserve, #ffae62);
+}
+
+.tachometer {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #d4ad7f;
+    font-size: clamp(10px, 0.95vh, 16px);
+}
+
+#rpm-strip {
+    flex: 1;
+    height: clamp(8px, 0.72vh, 12px);
+    background:
+        linear-gradient(90deg, transparent var(--rpm-fill, 0%), var(--hud-track, #423127) 0),
+        linear-gradient(90deg, var(--hud-rpm, var(--hud-accent, #ffb84f)) 75%, var(--hud-redline, #ff604f) 0);
+    mask-image: repeating-linear-gradient(90deg, #000 0 7%, transparent 7% 8.3333%);
+}
+
+.gear {
+    color: #d4ad7f;
+    white-space: nowrap;
+}
+
+#gear-value {
+    display: inline-block;
+    min-width: 2ch;
+    color: var(--hud-gear, var(--hud-text, var(--hud-accent, #ffd07c)));
+    font-size: clamp(16px, 1.55vh, 26px);
+    text-align: right;
+}
+
+#hud[data-theme="digital"] {
+    background: var(--hud-background, rgb(13 25 38 / 81%));
+    border-color: var(--hud-border, #314a62);
+    border-radius: 14px;
+    border-top: 2px solid var(--hud-accent, #79d9fd);
+    font-family: system-ui, sans-serif;
+    align-items: center;
+}
+
+#hud[data-theme="digital"] .speed {
+    grid-row: 1;
+    align-items: baseline;
+    gap: 8px;
+    color: var(--hud-text, #eef9ff);
+    letter-spacing: -0.065em;
+    text-shadow: none;
+}
+
+#hud[data-theme="digital"] .fuel {
+    grid-row: 1;
+    grid-column: 2;
+    gap: 6px;
+}
+
+#hud[data-theme="digital"] .unit,
+#hud[data-theme="digital"] .fuel-label,
+#hud[data-theme="digital"] .tachometer {
+    color: var(--hud-muted, #a7bcd1);
+}
+
+#hud[data-theme="digital"] progress::-webkit-progress-bar {
+    background: var(--hud-track, #2b4055);
+}
+
+#hud[data-theme="digital"] progress:not(.low)::-webkit-progress-value {
+    background: var(--hud-fuel, var(--hud-accent, #79d9fd));
+}
+
+#hud[data-theme="digital"] .tachometer {
+    grid-row: 2;
+    padding: 6px 8px;
+    border-radius: 6px;
+    background: var(--hud-panel, rgb(23 42 60 / 52%));
+}
+
+#hud[data-theme="digital"] #rpm-strip {
+    background:
+        linear-gradient(90deg, transparent var(--rpm-fill, 0%), var(--hud-track, #2b4055) 0),
+        linear-gradient(90deg, var(--hud-rpm, var(--hud-accent, #79d9fd)) 75%, var(--hud-redline, #ff786f) 0);
+    mask-image: none;
+    border-radius: 3px;
+}
+
+#hud[data-theme="digital"] .gear {
+    color: inherit;
+}
+
+#hud[data-theme="digital"] #gear-value {
+    color: var(--hud-text, #eef9ff);
+}
+
+#hud[data-theme="digital"] .lamps {
+    grid-row: 3;
+}
+
+#hud[data-theme="digital"] .lamp:not(.active):not([data-beam="low"]):not([data-beam="high"]) {
+    border-color: var(--hud-border, #263a50);
+    border-radius: 5px;
+    background: var(--hud-panel, #111f2d);
+    color: var(--hud-muted, #71869c);
+}
+
+#hud:is([data-theme="single_round"], [data-theme="dual_round"]) {
+    --hud-accent: #79e4bb;
+    --hud-redline: #ff786f;
+    --hud-reserve: #ffae62;
+    --hud-text: #ebfff8;
+    --hud-muted: #aad0c4;
+    --hud-track: #324d49;
+    --hud-ticks: #81a39c;
+    --hud-border: #44625f;
+    --hud-dial-center: #1e3433d6;
+    --hud-dial-edge: #111a1bc7;
+    --hud-panel: #101b1bcf;
+}
+
+#hud:is([data-theme="single_round"], [data-theme="dual_round"]) .unit,
+#hud:is([data-theme="single_round"], [data-theme="dual_round"]) .fuel-label {
+    color: var(--hud-muted);
+}
+
+#hud:is([data-theme="single_round"], [data-theme="dual_round"]) #fuel-value {
+    color: var(--hud-text);
+}
+
+#hud[data-theme="single_round"] #fuel-bar::-webkit-progress-bar {
+    background: var(--hud-track);
+}
+
+#hud[data-theme="single_round"] #fuel-bar::-webkit-progress-value {
+    background: var(--hud-fuel, var(--hud-accent));
+}
+
+#hud[data-theme="single_round"] #fuel-bar.low::-webkit-progress-value {
+    background: var(--hud-reserve);
+}
+
+#hud[data-theme="single_round"] {
+    width: clamp(234px, 23vh, 340px);
+    padding: 0;
+    border: 0;
+    background: none;
+    box-shadow: none;
+    font-family: system-ui, sans-serif;
+}
+
+#hud[data-theme="single_round"]:not([hidden]) {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+}
+
+#hud:is([data-theme="single_round"], [data-theme="dual_round"]) .speed {
+    position: relative;
+    grid-row: 1;
+    grid-column: 1;
+    box-sizing: border-box;
+    width: 92%;
+    aspect-ratio: 1;
+    justify-self: center;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 2px;
+    padding-bottom: 9%;
+    border: 1px solid var(--hud-border);
+    border-radius: 50%;
+    background: radial-gradient(circle at 50% 40%, var(--hud-dial-center), var(--hud-dial-edge) 68%);
+    box-shadow: inset 0 0 0 5px #0d1515, 0 5px 18px rgb(0 0 0 / 35%);
+    color: var(--hud-text);
+    letter-spacing: -0.055em;
+    text-shadow: none;
+}
+
+#hud:is([data-theme="single_round"], [data-theme="dual_round"]) .speed::before,
+#hud:is([data-theme="single_round"], [data-theme="dual_round"]) .speed::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+}
+
+#hud:is([data-theme="single_round"], [data-theme="dual_round"]) .speed::before {
+    background: conic-gradient(
+        from 225deg,
+        var(--hud-speed, var(--hud-accent)) 0deg var(--dial-sweep, 0deg),
+        var(--hud-track) var(--dial-sweep, 0deg) 270deg,
+        transparent 270deg
+    );
+    mask-image: radial-gradient(farthest-side, transparent 82%, #000 83% 88%, transparent 89%);
+}
+
+#hud:is([data-theme="single_round"], [data-theme="dual_round"]) .speed::after {
+    background: repeating-conic-gradient(from 0deg, var(--hud-ticks) 0deg 1deg, transparent 1deg 15deg);
+    mask-image: radial-gradient(farthest-side, transparent 73%, #000 74% 77%, transparent 78%);
+    opacity: 0.55;
+}
+
+#hud[data-theme="single_round"] .fuel {
+    grid-row: 1;
+    grid-column: 1;
+    z-index: 1;
+    align-self: end;
+    justify-self: center;
+    width: 35%;
+    margin-bottom: 17%;
+}
+
+#hud[data-theme="single_round"] .tachometer {
+    grid-row: 2;
+    padding: 7px 10px;
+    border: 1px solid var(--hud-border);
+    border-radius: 7px;
+    background: var(--hud-panel);
+    color: var(--hud-muted);
+}
+
+#hud[data-theme="single_round"] .gear {
+    color: inherit;
+}
+
+#hud[data-theme="single_round"] #gear-value {
+    color: var(--hud-text);
+}
+
+#hud[data-theme="single_round"] #rpm-strip {
+    background:
+        linear-gradient(90deg, transparent var(--rpm-fill, 0%), var(--hud-track) 0),
+        linear-gradient(90deg, var(--hud-rpm, var(--hud-accent)) 75%, var(--hud-redline) 0);
+}
+
+#hud[data-theme="single_round"] .lamps {
+    grid-row: 3;
+}
+
+#fuel-dial {
+    display: none;
+}
+
+#hud[data-theme="dual_round"] {
+    width: clamp(280px, 30vh, 440px);
+    padding: 0;
+    border: 0;
+    background: none;
+    box-shadow: none;
+    font-family: system-ui, sans-serif;
+}
+
+#hud[data-theme="dual_round"]:not([hidden]) {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 34%);
+    align-items: center;
+    gap: 8px 10px;
+}
+
+#hud[data-theme="dual_round"] .speed {
+    grid-row: 1 / 3;
+    width: 100%;
+    padding-bottom: 0;
+}
+
+#hud[data-theme="dual_round"] .tachometer {
+    display: grid;
+    grid-template-rows: 1fr auto 1fr;
+    grid-row: 1;
+    grid-column: 2;
+    justify-items: center;
+    align-items: center;
+    gap: 0;
+    color: var(--hud-muted);
+}
+
+#hud[data-theme="dual_round"] .tachometer,
+#hud[data-theme="dual_round"] .fuel {
+    position: relative;
+    box-sizing: border-box;
+    width: 100%;
+    aspect-ratio: 1;
+    border: 1px solid var(--hud-border);
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--hud-dial-center), var(--hud-dial-edge) 70%);
+}
+
+#hud[data-theme="dual_round"] .tachometer > span {
+    grid-row: 2;
+}
+
+#hud[data-theme="dual_round"] #rpm-strip,
+#hud[data-theme="dual_round"] #fuel-dial {
+    position: absolute;
+    inset: 0;
+    height: auto;
+    border-radius: 50%;
+    mask-image: radial-gradient(farthest-side, transparent 75%, #000 76% 83%, transparent 84%);
+}
+
+#hud[data-theme="dual_round"] #rpm-strip {
+    background:
+        conic-gradient(from 225deg, transparent var(--rpm-sweep, 0deg), var(--hud-track) 0deg 270deg, transparent 0deg),
+        conic-gradient(from 225deg, var(--hud-rpm, var(--hud-accent)) 0deg 202.5deg, var(--hud-redline) 0deg 270deg, transparent 0deg);
+}
+
+#hud[data-theme="dual_round"] .gear {
+    grid-row: 3;
+    align-self: start;
+    color: inherit;
+}
+
+#hud[data-theme="dual_round"] #gear-value {
+    color: var(--hud-text);
+}
+
+#hud[data-theme="dual_round"] .fuel {
+    grid-row: 2;
+    grid-column: 2;
+    padding: 0;
+}
+
+#hud[data-theme="dual_round"] .fuel-label {
+    position: absolute;
+    inset: 0;
+    justify-content: center;
+    align-items: center;
+}
+
+#hud[data-theme="dual_round"] #fuel-bar,
+#hud[data-theme="dual_round"] #fuel-value {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    clip-path: inset(50%);
+    overflow: hidden;
+}
+
+#hud[data-theme="dual_round"] #fuel-dial {
+    display: block;
+    background: conic-gradient(
+        from 225deg,
+        var(--fuel-ring-color, var(--hud-fuel, var(--hud-accent))) 0deg var(--fuel-sweep, 0deg),
+        var(--hud-track) var(--fuel-sweep, 0deg) 270deg,
+        transparent 270deg
+    );
+}
+
+#hud[data-theme="dual_round"] #fuel-bar.low + #fuel-dial {
+    --fuel-ring-color: var(--hud-reserve);
+}
+
+#hud[data-theme="dual_round"] .lamps {
+    grid-row: 3;
+}
+
+#hud[data-theme="supercar"] {
+    width: clamp(300px, 33vh, 490px);
+    padding: clamp(15px, 1.65vh, 27px);
+    border: 0;
+    background: linear-gradient(150deg, var(--hud-background, rgb(38 42 45 / 62%)), var(--hud-background-edge, rgb(15 17 19 / 54%)) 60%);
+    box-shadow: none;
+    clip-path: polygon(7% 0, 93% 0, 100% 24%, 100% 82%, 94% 100%, 6% 100%, 0 82%, 0 24%);
+    font-family: system-ui, sans-serif;
+}
+
+#hud[data-theme="supercar"]:not([hidden]) {
+    grid-template-columns: minmax(0, 1fr) auto minmax(76px, 0.65fr);
+    align-items: center;
+    gap: 8px clamp(9px, 1vh, 16px);
+}
+
+#hud[data-theme="supercar"] .tachometer {
+    display: contents;
+}
+
+#hud[data-theme="supercar"] .tachometer > span {
+    grid-area: 1 / 1 / 2 / -1;
+    color: var(--hud-muted, #e1bd62);
+    font-weight: 750;
+    letter-spacing: 0.12em;
+}
+
+#hud[data-theme="supercar"] #rpm-strip {
+    grid-area: 2 / 1 / 3 / -1;
+    height: clamp(18px, 2.4vh, 38px);
+    background:
+        linear-gradient(90deg, transparent var(--rpm-fill, 0%), var(--hud-track, #3a3936) 0),
+        linear-gradient(90deg, var(--hud-rpm, var(--hud-accent, #f8c943)) 75%, var(--hud-redline, #ff5147) 0);
+    clip-path: polygon(0 65%, 18% 65%, 28% 35%, 68% 35%, 79% 0, 100% 0, 96% 100%, 0 100%);
+    mask-image: repeating-linear-gradient(108deg, #000 0 6%, transparent 6% 7%);
+}
+
+#hud[data-theme="supercar"] .speed {
+    grid-area: 3 / 1;
+    gap: 5px;
+    color: var(--hud-text, #fff);
+    font-size: clamp(31px, 4.4vh, 66px);
+    font-style: italic;
+    font-weight: 850;
+    letter-spacing: -0.07em;
+    text-shadow: none;
+}
+
+#hud[data-theme="supercar"] .gear {
+    grid-area: 3 / 2;
+    display: grid;
+    justify-items: center;
+    min-width: 3.6em;
+    padding: 4px 8px 6px;
+    border-block: 1px solid var(--hud-border, #615436);
+    background: var(--hud-panel, rgb(41 35 24 / 38%));
+    color: var(--hud-muted, #ebcf91);
+    text-transform: uppercase;
+}
+
+#hud[data-theme="supercar"] #gear-value {
+    min-width: 0;
+    color: var(--hud-gear, #ffd05b);
+    font-size: clamp(20px, 2.3vh, 36px);
+    line-height: 1;
+}
+
+#hud[data-theme="supercar"] .fuel {
+    grid-area: 3 / 3;
+}
+
+#hud[data-theme="supercar"] progress:not(.low)::-webkit-progress-value {
+    background: var(--hud-fuel, var(--hud-accent, #f8c943));
+}
+
+#hud[data-theme="supercar"] .lamps {
+    grid-row: 4;
+}
+
+#hud[data-theme="supercar2"] {
+    width: clamp(300px, 35vh, 520px);
+    padding: 14px clamp(16px, 1.7vh, 27px) 15px;
+    border: 0;
+    border-radius: 0;
+    background: radial-gradient(ellipse at 50% 40%, var(--hud-background, rgb(32 36 44 / 80%)), var(--hud-background-edge, rgb(9 11 15 / 74%)) 72%);
+    clip-path: polygon(13% 0, 87% 0, 100% 23%, 100% 78%, 94% 100%, 6% 100%, 0 78%, 0 23%);
+    font-family: system-ui, sans-serif;
+}
+
+#hud[data-theme="supercar2"]:not([hidden]) {
+    grid-template-columns: minmax(76px, 1fr) 1fr minmax(76px, 1fr);
+    align-items: center;
+    gap: 6px 12px;
+}
+
+#hud[data-theme="supercar2"] .tachometer {
+    display: contents;
+}
+
+#hud[data-theme="supercar2"] .tachometer > span {
+    grid-area: 2 / 2;
+    justify-self: center;
+    color: var(--hud-muted, #b6bdca);
+    letter-spacing: 0.12em;
+}
+
+#hud[data-theme="supercar2"] #rpm-strip {
+    position: relative;
+    grid-area: 1 / 1 / 2 / -1;
+    justify-self: center;
+    width: 90%;
+    height: auto;
+    aspect-ratio: 2.1;
+    overflow: hidden;
+    background: none;
+    mask-image: none;
+}
+
+#hud[data-theme="supercar2"] #rpm-strip::before,
+#hud[data-theme="supercar2"] #rpm-strip::after {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto;
+    width: 100%;
+    aspect-ratio: 1;
+}
+
+#hud[data-theme="supercar2"] #rpm-strip::before {
+    background:
+        conic-gradient(from 290deg, transparent var(--cockpit-sweep, 0deg), var(--hud-track, rgb(9 11 15 / 72%)) 0deg 140deg, transparent 0deg),
+        conic-gradient(from 290deg, var(--hud-rpm, var(--hud-accent, #f2f5fa)) 0deg 119deg, var(--hud-redline, #fa605b) 0deg 140deg, transparent 0deg);
+    mask-image: radial-gradient(farthest-side, transparent 83%, #000 84% 89%, transparent 90%);
+}
+
+#hud[data-theme="supercar2"] #rpm-strip::after {
+    background: repeating-conic-gradient(from 290deg, var(--hud-ticks, #c6cbd4) 0deg 0.8deg, transparent 0.8deg 7deg);
+    mask-image: radial-gradient(farthest-side, transparent 92%, #000 93% 97%, transparent 98%);
+    clip-path: polygon(50% 50%, 0 32%, 0 0, 100% 0, 100% 32%);
+}
+
+#hud[data-theme="supercar2"] .gear {
+    z-index: 1;
+    grid-area: 1 / 2;
+    align-self: end;
+    justify-items: center;
+    display: grid;
+    padding-bottom: 5%;
+    color: var(--hud-muted, #b6bdca);
+}
+
+#hud[data-theme="supercar2"] #gear-value {
+    min-width: 0;
+    font-size: clamp(46px, 6.2vh, 90px);
+    font-style: italic;
+    font-weight: 850;
+    line-height: 1;
+    color: var(--hud-text, #f3f6fb);
+}
+
+#hud[data-theme="supercar2"] .speed {
+    grid-area: 2 / 3;
+    justify-self: end;
+    font-size: clamp(23px, 2.8vh, 43px);
+    font-style: italic;
+    color: var(--hud-text, #f3f6fb);
+    letter-spacing: -0.06em;
+    text-shadow: none;
+}
+
+#hud[data-theme="supercar2"] .fuel {
+    grid-area: 2 / 1;
+}
+
+#hud[data-theme="supercar2"] .lamps {
+    grid-row: 3;
+    padding-top: 7px;
+    border-top: 1px solid var(--hud-border, #49515e);
+}
+
+#hud[data-theme="supercar3"] {
+    width: clamp(320px, 35vh, 530px);
+    padding: clamp(12px, 1.25vh, 20px);
+    border: 1px solid var(--hud-border, #72838e);
+    border-radius: 20px 20px 12px 12px;
+    background: linear-gradient(160deg, var(--hud-background, rgb(51 64 74 / 82%)), var(--hud-background-edge, rgb(10 18 25 / 76%)) 32%);
+    font-family: system-ui, sans-serif;
+}
+
+#hud[data-theme="supercar3"]:not([hidden]) {
+    grid-template-columns: minmax(62px, 1fr) minmax(0, 2.35fr) minmax(68px, 1fr);
+    align-items: center;
+    gap: 9px clamp(5px, 0.75vh, 12px);
+}
+
+#hud[data-theme="supercar3"] .tachometer {
+    display: contents;
+}
+
+#hud[data-theme="supercar3"] #rpm-strip {
+    position: relative;
+    grid-area: 1 / 2;
+    box-sizing: border-box;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1;
+    border: 3px solid var(--hud-border, #81939e);
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--hud-dial-center, rgb(23 38 49 / 55%)), var(--hud-dial-edge, rgb(7 16 24 / 42%)) 69%);
+    box-shadow: 0 0 0 2px #17232b, inset 0 0 0 3px #283a45, 0 4px 12px rgb(0 0 0 / 45%);
+    mask-image: none;
+}
+
+#hud[data-theme="supercar3"] #rpm-strip::before {
+    content: '';
+    position: absolute;
+    inset: 4%;
+    background:
+        conic-gradient(from 225deg, transparent var(--cluster-sweep, 0deg), var(--hud-track, rgb(7 16 24 / 72%)) 0deg 270deg, #071018 0deg),
+        conic-gradient(from 225deg, var(--hud-rpm, var(--hud-accent, #57e5ff)) 0deg 211deg, var(--hud-redline, #ff4f5e) 0deg 270deg, transparent 0deg);
+    mask-image: radial-gradient(farthest-side, transparent 75%, #000 76% 91%, transparent 92%);
+}
+
+#hud[data-theme="supercar3"] #rpm-strip::after {
+    content: '';
+    position: absolute;
+    left: calc(50% - 1px);
+    bottom: 50%;
+    width: 2px;
+    height: 32%;
+    border-radius: 2px;
+    background: var(--hud-needle, var(--hud-accent, #ff626b));
+    box-shadow: 0 0 5px #d43f51;
+    transform-origin: center bottom;
+    transform: rotate(calc(var(--cluster-sweep, 0deg) - 135deg));
+}
+
+#hud[data-theme="supercar3"] .tachometer > span {
+    z-index: 1;
+    grid-area: 1 / 2;
+    align-self: end;
+    justify-self: center;
+    margin-bottom: 9%;
+    color: var(--hud-muted, #83bfce);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+}
+
+#hud[data-theme="supercar3"] .speed {
+    z-index: 1;
+    grid-area: 1 / 2;
+    align-self: end;
+    justify-self: center;
+    margin-bottom: 17%;
+    padding: 2px 5px;
+    border-radius: 3px;
+    background: var(--hud-panel, rgb(16 30 40 / 65%));
+    color: var(--hud-text, #e5f9ff);
+    font-size: clamp(21px, 3vh, 46px);
+    letter-spacing: -0.06em;
+    text-shadow: none;
+}
+
+#hud[data-theme="supercar3"] .gear {
+    grid-area: 1 / 1;
+    display: grid;
+    justify-items: center;
+    gap: 4px;
+    padding: 7px 3px;
+    border-block: 1px solid var(--hud-border, #456371);
+    background: var(--hud-panel, rgb(8 17 25 / 74%));
+    color: var(--hud-muted, #a5d5e2);
+}
+
+#hud[data-theme="supercar3"] #gear-value {
+    min-width: 0;
+    color: var(--hud-gear, #88edff);
+    font-size: clamp(27px, 3.5vh, 52px);
+    line-height: 1;
+}
+
+#hud[data-theme="supercar3"] .fuel {
+    grid-area: 1 / 3;
+}
+
+#hud[data-theme="supercar3"] progress:not(.low)::-webkit-progress-value {
+    background: var(--hud-fuel, var(--hud-accent, #57d9ef));
+}
+
+#hud[data-theme="supercar3"] .lamps {
+    grid-row: 2;
+}
+
+#hud[data-theme="electric"] {
+    width: clamp(320px, 35vh, 520px);
+    padding: clamp(11px, 1.1vh, 17px);
+    border: 1px solid var(--hud-border, #426787);
+    border-radius: 20px;
+    background: linear-gradient(155deg, var(--hud-background, rgb(18 39 62 / 81%)), var(--hud-background-edge, rgb(6 14 28 / 74%)) 64%);
+    font-family: system-ui, sans-serif;
+}
+
+#hud[data-theme="electric"]:not([hidden]) {
+    grid-template-columns: minmax(100px, 1.3fr) minmax(74px, 1fr) minmax(66px, 0.8fr);
+    align-items: stretch;
+    gap: 8px;
+}
+
+#hud[data-theme="electric"] .speed,
+#hud[data-theme="electric"] .tachometer,
+#hud[data-theme="electric"] .fuel {
+    grid-row: 1;
+    position: relative;
+    box-sizing: border-box;
+    border: 1px solid var(--hud-border, #385779);
+    border-radius: 12px;
+    background: linear-gradient(160deg, var(--hud-dial-center, rgb(20 44 74 / 50%)), var(--hud-dial-edge, rgb(10 24 44 / 40%)));
+}
+
+#hud[data-theme="electric"] .speed {
+    grid-column: 1;
+    aspect-ratio: 1;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1px;
+    color: var(--hud-text, #f1f8ff);
+    font-size: clamp(24px, 3.1vh, 45px);
+    letter-spacing: -0.045em;
+    text-shadow: 0 0 11px rgb(108 175 255 / 55%);
+}
+
+#hud[data-theme="electric"] .speed::before {
+    content: '';
+    position: absolute;
+    inset: 6%;
+    border-radius: 50%;
+    background: conic-gradient(
+        from 225deg,
+        var(--hud-speed, var(--hud-accent, #5fafff)) 0deg var(--dial-sweep, 0deg),
+        var(--hud-track, #3e628b) var(--dial-sweep, 0deg) 270deg,
+        transparent 270deg
+    );
+    mask-image: radial-gradient(farthest-side, transparent 88%, #000 89% 94%, transparent 95%);
+}
+
+#hud[data-theme="electric"] .tachometer {
+    grid-column: 2;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    color: var(--hud-muted, #a8c6e7);
+}
+
+#hud[data-theme="electric"] .tachometer > span {
+    text-align: center;
+}
+
+#hud[data-theme="electric"] #rpm-strip {
+    background: linear-gradient(to top, var(--hud-rpm, var(--hud-accent, #65b4ff)) var(--rpm-fill, 0%), var(--hud-track, #2b4564) 0);
+    mask-image: none;
+}
+
+#hud[data-theme="electric"] .gear {
+    display: none;
+}
+
+#hud[data-theme="electric"] .fuel {
+    grid-column: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#hud[data-theme="electric"] .tachometer,
+#hud[data-theme="electric"] .fuel {
+    gap: 5px;
+    padding: 8px 5px;
+}
+
+#hud[data-theme="electric"] .fuel-label {
+    flex-direction: column-reverse;
+    align-items: center;
+    color: var(--hud-muted, #a8c6e7);
+}
+
+#hud[data-theme="electric"] #rpm-strip,
+#hud[data-theme="electric"] #fuel-dial {
+    flex: 1;
+    width: clamp(44px, 5.6vh, 84px);
+    max-width: 85%;
+    height: auto;
+    min-height: 0;
+    border-radius: 5px;
+}
+
+#hud[data-theme="electric"] #fuel-bar {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    clip-path: inset(50%);
+    overflow: hidden;
+}
+
+#hud[data-theme="electric"] #fuel-bar:not([hidden]) + #fuel-dial {
+    display: block;
+    background: linear-gradient(to top, var(--electric-fuel-color, var(--hud-fuel, var(--hud-accent, #5faaff))) var(--fuel-level, 0%), var(--hud-track, #2b4564) 0);
+}
+
+#hud[data-theme="electric"] #fuel-bar.low + #fuel-dial {
+    --electric-fuel-color: var(--hud-reserve, #ffae62);
+}
+
+#hud[data-theme="electric"] .lamps {
+    grid-row: 2;
+}
+
+#hud[data-theme="touring"] {
+    width: clamp(320px, 34vh, 490px);
+    padding: clamp(12px, 1.25vh, 20px);
+    border: 1px solid var(--hud-border, #3f5455);
+    border-radius: 24px 24px 12px 12px;
+    background: radial-gradient(ellipse at 50% 0%, var(--hud-background, rgb(30 56 57 / 82%)), var(--hud-background-edge, rgb(8 16 19 / 76%)) 74%);
+    font-family: system-ui, sans-serif;
+}
+
+#hud[data-theme="touring"]:not([hidden]) {
+    grid-template-columns: minmax(65px, 1fr) minmax(0, 2fr) minmax(65px, 1fr);
+    align-items: stretch;
+    gap: 8px clamp(6px, 0.7vh, 11px);
+}
+
+#hud[data-theme="touring"] .speed {
+    position: relative;
+    grid-area: 1 / 2;
+    aspect-ratio: 1;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 2px;
+    border: 1px solid var(--hud-border, #426462);
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--hud-dial-center, rgb(21 42 44 / 53%)), var(--hud-dial-edge, rgb(9 19 25 / 41%)) 70%);
+    box-shadow: inset 0 0 0 4px #0d1d21;
+    color: var(--hud-text, #ecfffc);
+    font-size: clamp(31px, 4vh, 58px);
+    letter-spacing: -0.06em;
+    text-shadow: none;
+}
+
+#hud[data-theme="touring"] .speed::before {
+    content: '';
+    position: absolute;
+    inset: 6%;
+    border-radius: 50%;
+    background: conic-gradient(
+        from 225deg,
+        var(--hud-speed, var(--hud-accent, #72e7c9)) 0deg var(--dial-sweep, 0deg),
+        var(--hud-track, #345957) var(--dial-sweep, 0deg) 270deg,
+        transparent 270deg
+    );
+    mask-image: radial-gradient(farthest-side, transparent 83%, #000 84% 91%, transparent 92%);
+}
+
+#hud[data-theme="touring"] .tachometer,
+#hud[data-theme="touring"] .fuel {
+    position: relative;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    justify-items: center;
+    align-items: center;
+    gap: 6px;
+    margin-block: 8%;
+    padding: 7px 4px;
+    background: var(--hud-panel, rgb(6 15 20 / 45%));
+    border-block: 1px solid var(--hud-border, #314a4c);
+    color: var(--hud-muted, #9ebfc1);
+}
+
+#hud[data-theme="touring"] .tachometer {
+    grid-area: 1 / 1;
+    border-radius: 18px 5px 5px 18px;
+}
+
+#hud[data-theme="touring"] .fuel {
+    grid-area: 1 / 3;
+    border-radius: 5px 18px 18px 5px;
+}
+
+#hud[data-theme="touring"] .fuel-label {
+    display: contents;
+}
+
+#hud[data-theme="touring"] .fuel-label label {
+    grid-row: 1;
+}
+
+#hud[data-theme="touring"] #fuel-value {
+    grid-row: 3;
+    color: var(--hud-text, #ecfffc);
+}
+
+#hud[data-theme="touring"] .gear {
+    grid-row: 3;
+    color: inherit;
+}
+
+#hud[data-theme="touring"] #gear-value {
+    color: var(--hud-text, #ecfffc);
+}
+
+#hud[data-theme="touring"] #rpm-strip,
+#hud[data-theme="touring"] #fuel-dial {
+    grid-row: 2;
+    width: 78%;
+    height: 100%;
+    mask-image: repeating-linear-gradient(to top, #000 0 5px, transparent 5px 7px);
+}
+
+#hud[data-theme="touring"] #rpm-strip {
+    background:
+        linear-gradient(to top, transparent var(--rpm-fill, 0%), var(--hud-track, #293d40) 0),
+        linear-gradient(to top, var(--hud-rpm, var(--hud-accent, #59d1cd)) 75%, var(--hud-redline, #ff7469) 0);
+    clip-path: polygon(31% 0, 96% 0, 78% 26%, 70% 50%, 78% 74%, 96% 100%, 31% 100%, 12% 74%, 4% 50%, 12% 26%);
+}
+
+#hud[data-theme="touring"] #fuel-bar {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    clip-path: inset(50%);
+    overflow: hidden;
+}
+
+#hud[data-theme="touring"] #fuel-bar:not([hidden]) + #fuel-dial {
+    display: block;
+    background: linear-gradient(to top, var(--touring-fuel-color, var(--hud-fuel, var(--hud-accent, #72e7c9))) var(--fuel-level, 0%), var(--hud-track, #293d40) 0);
+    clip-path: polygon(4% 0, 69% 0, 88% 26%, 96% 50%, 88% 74%, 69% 100%, 4% 100%, 22% 74%, 30% 50%, 22% 26%);
+}
+
+#hud[data-theme="touring"] #fuel-bar.low + #fuel-dial {
+    --touring-fuel-color: var(--hud-reserve, #ffae62);
+}
+
+#hud[data-theme="touring"] .lamps {
+    grid-row: 2;
+}
+
+#analog-scale,
+#analog-needle {
+    display: none;
+}
+
+#hud:is([data-theme="analog"], [data-theme="vintage"]) {
+    width: clamp(350px, 33vh, 500px);
+    padding: clamp(10px, 1.1vh, 17px);
+    border-color: var(--hud-border, #554b42);
+    border-radius: 16px;
+    background: var(--hud-background, rgb(24 22 21 / 76%));
+}
+
+#hud:is([data-theme="analog"], [data-theme="vintage"]):not([hidden]) {
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.95fr) minmax(0, 0.9fr);
+    align-items: center;
+    gap: 7px 8px;
+}
+
+#hud:is([data-theme="analog"], [data-theme="vintage"]) .speed {
+    position: relative;
+    grid-area: 1 / 2;
+    display: grid;
+    justify-items: center;
+    align-content: end;
+    box-sizing: border-box;
+    width: 100%;
+    aspect-ratio: 1;
+    justify-self: center;
+    padding-bottom: 10%;
+    gap: 3px;
+    border: 2px solid var(--hud-border, #92887a);
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--hud-dial-center, rgb(41 36 33 / 57%)), var(--hud-dial-edge, rgb(16 16 15 / 44%)) 69%);
+    box-shadow: inset 0 0 0 4px #171511;
+    color: var(--hud-text, #fff0d7);
+    font-size: clamp(24px, 2.9vh, 42px);
+    text-shadow: none;
+}
+
+#hud:is([data-theme="analog"], [data-theme="vintage"]) #analog-scale,
+#hud:is([data-theme="analog"], [data-theme="vintage"]) #analog-needle {
+    position: absolute;
+    inset: 0;
+    display: block;
+}
+
+.analog-mark {
+    position: absolute;
+    inset: 0;
+}
+
+.analog-mark::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 7%;
+    width: 1px;
+    height: 3%;
+    background: var(--hud-ticks, #a69988);
+}
+
+.analog-mark.major::before {
+    width: 2px;
+    height: 6%;
+    background: var(--hud-text, #fff0d7);
+}
+
+.analog-number {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    font-size: clamp(10px, 1vh, 15px);
+    line-height: 1;
+}
+
+#hud:is([data-theme="analog"], [data-theme="vintage"]) #analog-needle {
+    transform: rotate(var(--analog-angle, -135deg));
+    transition: transform 140ms ease-out;
+}
+
+#analog-needle::before,
+#analog-needle::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 50%;
+}
+
+#analog-needle::before {
+    width: 4px;
+    height: 31%;
+    transform: translateX(-50%);
+    clip-path: polygon(50% 0, 100% 100%, 0 100%);
+    background: var(--hud-speed, var(--hud-needle, var(--hud-accent, #ff6152)));
+}
+
+#analog-needle::after {
+    width: 7%;
+    aspect-ratio: 1;
+    transform: translate(-50%, 50%);
+    border: 1px solid var(--hud-border, #9c9080);
+    border-radius: 50%;
+    background: #201c19;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #hud:is([data-theme="analog"], [data-theme="vintage"]) #analog-needle {
+        transition: none;
+    }
+}
+
+#hud:is([data-theme="analog"], [data-theme="vintage"]) .fuel {
+    grid-area: 1 / 3;
+    padding-bottom: 0;
+}
+
+#hud:is([data-theme="analog"], [data-theme="vintage"]) .tachometer {
+    grid-area: 1 / 1;
+}
+
+#hud:is([data-theme="analog"], [data-theme="vintage"]) .fuel,
+#hud:is([data-theme="analog"], [data-theme="vintage"]) .tachometer {
+    position: relative;
+    display: grid;
+    box-sizing: border-box;
+    width: 100%;
+    aspect-ratio: 1;
+    border: 1px solid var(--hud-border, #92887a);
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--hud-dial-center, rgb(41 36 33 / 57%)), var(--hud-dial-edge, rgb(16 16 15 / 44%)) 69%);
+    box-shadow: inset 0 0 0 3px #171511;
+}
+
+#hud:is([data-theme="analog"], [data-theme="vintage"]) .fuel-label,
+#hud:is([data-theme="analog"], [data-theme="vintage"]) .tachometer > span,
+#hud:is([data-theme="analog"], [data-theme="vintage"]) .gear {
+    position: absolute;
+    z-index: 1;
+    inset: auto 0 26%;
+    justify-content: center;
+    color: var(--hud-text, #fff0d7);
+    text-align: center;
+}
+
+#hud:is([data-theme="analog"], [data-theme="vintage"]) .gear {
+    bottom: 10%;
+    font-size: clamp(9px, 0.8vh, 12px);
+}
+
+#hud:is([data-theme="analog"], [data-theme="vintage"]) #gear-value {
+    font-size: inherit;
+}
+
+#hud:is([data-theme="analog"], [data-theme="vintage"]) #fuel-bar,
+#hud:is([data-theme="analog"], [data-theme="vintage"]) #fuel-value {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    clip-path: inset(50%);
+    overflow: hidden;
+}
+
+#hud:is([data-theme="analog"], [data-theme="vintage"]) #rpm-strip,
+#hud:is([data-theme="analog"], [data-theme="vintage"]) #fuel-dial {
+    position: absolute;
+    display: block;
+    inset: 0;
+    height: auto;
+    border-radius: 50%;
+    background: none;
+    mask-image: none;
+}
+
+#hud:is([data-theme="analog"], [data-theme="vintage"]) #rpm-strip::before,
+#hud:is([data-theme="analog"], [data-theme="vintage"]) #fuel-dial::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-conic-gradient(from 295deg, var(--hud-ticks, #d9c9b0) 0deg 2deg, transparent 2deg 13deg);
+    mask-image: radial-gradient(farthest-side, transparent 70%, #000 71% 83%, transparent 84%);
+    clip-path: polygon(50% 50%, 0 27%, 0 0, 100% 0, 100% 27%);
+}
+
+#hud:is([data-theme="analog"], [data-theme="vintage"]) #rpm-strip::after,
+#hud:is([data-theme="analog"], [data-theme="vintage"]) #fuel-dial::after {
+    content: '';
+    position: absolute;
+    left: calc(50% - 2px);
+    bottom: 50%;
+    width: 4px;
+    height: 34%;
+    background: var(--analog-subdial-color, var(--hud-needle, var(--hud-accent, #ff6152)));
+    clip-path: polygon(50% 0, 100% 100%, 0 100%);
+    transform-origin: center bottom;
+    transform: rotate(var(--analog-gauge-angle, -65deg));
+}
+
+#hud:is([data-theme="analog"], [data-theme="vintage"]) #fuel-bar[hidden] + #fuel-dial::after {
+    visibility: hidden;
+}
+
+#hud:is([data-theme="analog"], [data-theme="vintage"]) #rpm-strip {
+    --analog-subdial-color: var(--hud-rpm);
+}
+
+#hud:is([data-theme="analog"], [data-theme="vintage"]) #fuel-dial {
+    --analog-subdial-color: var(--hud-fuel);
+}
+
+.analog-fuel-mark {
+    display: none;
+}
+
+#hud:is([data-theme="analog"], [data-theme="vintage"]) .analog-fuel-mark {
+    position: absolute;
+    top: 43%;
+    display: block;
+    color: var(--hud-text, #fff0d7);
+    font-size: clamp(9px, 0.95vh, 14px);
+    line-height: 1;
+}
+
+#hud:is([data-theme="analog"], [data-theme="vintage"]) .analog-fuel-mark:first-child {
+    left: 12%;
+}
+
+#hud:is([data-theme="analog"], [data-theme="vintage"]) .analog-fuel-mark:nth-child(2) {
+    right: 12%;
+}
+
+#hud:is([data-theme="analog"], [data-theme="vintage"]) .lamps {
+    grid-row: 2;
+}
+
+#hud[data-theme="vintage"] {
+    padding: clamp(12px, 1.35vh, 21px);
+    border: 1px solid var(--hud-border, #6f593a);
+    border-radius: 28px 28px 12px 12px;
+    background: linear-gradient(180deg, var(--hud-background, rgb(39 33 23 / 82%)), var(--hud-background-edge, rgb(21 24 17 / 76%)) 45%);
+    box-shadow: inset 0 0 0 2px #241c13, 0 5px 14px rgb(0 0 0 / 35%);
+    font-family: Georgia, 'Times New Roman', serif;
+}
+
+#hud[data-theme="vintage"] .speed,
+#hud[data-theme="vintage"] .tachometer,
+#hud[data-theme="vintage"] .fuel {
+    border-color: var(--hud-border, #a48450);
+    background: radial-gradient(circle at 50% 74%, var(--hud-dial-center, rgb(48 75 40 / 61%)), var(--hud-panel, rgb(23 43 32 / 54%)) 57%, var(--hud-dial-edge, rgb(17 28 23 / 43%)) 78%);
+    box-shadow: inset 0 0 0 3px #1d2016, inset 0 0 15px rgb(181 124 57 / 20%);
+    color: var(--hud-text, #ffd399);
+}
+
+#hud[data-theme="vintage"] .speed {
+    padding-bottom: 17%;
+}
+
+#hud[data-theme="vintage"] #speed {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    clip-path: inset(50%);
+    overflow: hidden;
+}
+
+#hud[data-theme="vintage"] .unit,
+#hud[data-theme="vintage"] .analog-number,
+#hud[data-theme="vintage"] .analog-fuel-mark,
+#hud[data-theme="vintage"] .fuel-label,
+#hud[data-theme="vintage"] .tachometer > span,
+#hud[data-theme="vintage"] .gear {
+    color: var(--hud-text, #ffd399);
+    text-shadow: 0 0 5px rgb(238 145 52 / 55%);
+}
+
+#hud[data-theme="vintage"] .analog-mark::before {
+    background: var(--hud-ticks, #c58d53);
+}
+
+#hud[data-theme="vintage"] .analog-mark.major::before {
+    background: var(--hud-ticks, #ffcc86);
+}
+
+#hud[data-theme="vintage"] #rpm-strip::before,
+#hud[data-theme="vintage"] #fuel-dial::before {
+    background: repeating-conic-gradient(from 295deg, var(--hud-ticks, #ffcc86) 0deg 2deg, transparent 2deg 13deg);
+}
+
+#hud[data-theme="vintage"] #analog-needle::before {
+    background: var(--hud-speed, var(--hud-needle, var(--hud-accent, #ff974a)));
+}
+
+#hud[data-theme="vintage"] #rpm-strip::after,
+#hud[data-theme="vintage"] #fuel-dial::after {
+    background: var(--analog-subdial-color, var(--hud-needle, var(--hud-accent, #ff974a)));
+}
+
+#hud[data-theme="vintage"] #analog-needle::after {
+    border-color: var(--hud-border, #b08757);
+    background: #362a1a;
+}
+
+#hud[data-theme="vintage"] .lamps {
+    padding-top: 6px;
+    border-top: 1px solid var(--hud-border, #5f5137);
+}
+
+#hud[data-theme="motorcycle"] {
+    width: clamp(280px, 27vh, 420px);
+    padding: clamp(13px, 1.25vh, 20px);
+    border: 0;
+    background: linear-gradient(155deg, var(--hud-background, rgb(28 48 47 / 83%)), var(--hud-background-edge, rgb(8 19 22 / 78%)) 64%);
+    clip-path: polygon(7% 0, 93% 0, 100% 20%, 100% 80%, 90% 100%, 10% 100%, 0 80%, 0 20%);
+}
+
+#hud[data-theme="motorcycle"]:not([hidden]) {
+    grid-template-columns: minmax(0, 1fr) auto minmax(69px, 0.65fr);
+    align-items: center;
+    gap: 6px 10px;
+}
+
+#hud[data-theme="motorcycle"] .tachometer {
+    display: contents;
+}
+
+#hud[data-theme="motorcycle"] .tachometer > span {
+    grid-area: 1 / 1 / 2 / -1;
+    color: var(--hud-muted, #b0d5cf);
+}
+
+#hud[data-theme="motorcycle"] #rpm-strip {
+    grid-area: 2 / 1 / 3 / -1;
+    height: clamp(10px, 1.2vh, 18px);
+    background:
+        linear-gradient(90deg, transparent var(--rpm-fill, 0%), var(--hud-track, #364b49) 0),
+        linear-gradient(90deg, var(--hud-rpm, var(--hud-accent, #83e7c3)) 75%, var(--hud-redline, #ff785f) 0);
+}
+
+#hud[data-theme="motorcycle"] .speed {
+    grid-area: 3 / 1;
+    gap: 4px;
+    color: var(--hud-text, #effff9);
+    font-size: clamp(33px, 4vh, 59px);
+    letter-spacing: -0.045em;
+    text-shadow: none;
+}
+
+#hud[data-theme="motorcycle"] .gear {
+    grid-area: 3 / 2;
+    display: grid;
+    justify-items: center;
+    padding: 3px 5px 5px;
+    border: 1px solid var(--hud-border, #4b6c64);
+    border-radius: 4px;
+    background: var(--hud-panel, rgb(13 31 33 / 46%));
+    color: var(--hud-muted, #b0d5cf);
+    font-size: clamp(9px, 0.9vh, 13px);
+}
+
+#hud[data-theme="motorcycle"] #gear-value {
+    min-width: 0;
+    color: var(--hud-gear, #a1f6d6);
+    font-size: clamp(20px, 2.15vh, 31px);
+    line-height: 1;
+}
+
+#hud[data-theme="motorcycle"] .fuel {
+    grid-area: 3 / 3;
+}
+
+#hud[data-theme="motorcycle"] progress:not(.low)::-webkit-progress-value {
+    background: var(--hud-fuel, var(--hud-accent, #83e7c3));
+}
+
+#hud[data-theme="motorcycle"] .lamps {
+    grid-row: 4;
+}
+
+.orbit-pump {
+    display: none;
+}
+
+#hud[data-theme="orbit"] {
+    width: clamp(285px, 28vh, 440px);
+    padding: 0;
+    border: 0;
+    background: none;
+    box-shadow: none;
+    font-family: system-ui, sans-serif;
+}
+
+#hud[data-theme="orbit"]:not([hidden]) {
+    grid-template-columns: minmax(0, 0.65fr) minmax(0, 1.6fr) minmax(0, 0.35fr);
+    align-items: center;
+    gap: 5px 8px;
+}
+
+#hud[data-theme="orbit"] .speed {
+    position: relative;
+    grid-area: 1 / 2;
+    display: grid;
+    place-content: center;
+    justify-items: center;
+    gap: 0;
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--hud-dial-center, rgb(6 15 26 / 54%)), var(--hud-dial-edge, rgb(6 15 26 / 35%)) 51%, transparent 70%);
+    color: var(--hud-text, #f4f8ff);
+    font-size: clamp(37px, 4.3vh, 65px);
+    font-weight: 850;
+    font-style: italic;
+    letter-spacing: -0.055em;
+    text-shadow: 0 2px 6px #06101c;
+}
+
+#hud[data-theme="orbit"] .speed::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: conic-gradient(
+        from 225deg,
+        var(--hud-speed, var(--hud-accent, #68bbff)) 0deg var(--dial-sweep, 0deg),
+        var(--hud-track, rgb(214 230 248 / 55%)) var(--dial-sweep, 0deg) 270deg,
+        transparent 270deg
+    );
+    mask-image: radial-gradient(farthest-side, transparent 91%, #000 92% 96%, transparent 97%);
+}
+
+#hud[data-theme="orbit"] .unit {
+    font-style: normal;
+    color: var(--hud-muted, #e1ecfb);
+}
+
+#hud[data-theme="orbit"] .tachometer {
+    display: contents;
+}
+
+#hud[data-theme="orbit"] .tachometer > span {
+    grid-area: 1 / 2;
+    align-self: end;
+    justify-self: center;
+    margin-bottom: 12%;
+    color: var(--hud-muted, #d1dfef);
+    text-shadow: 0 1px 4px #08121f;
+}
+
+#hud[data-theme="orbit"] #rpm-strip {
+    grid-area: 1 / 2;
+    justify-self: center;
+    width: 70%;
+    height: auto;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: conic-gradient(
+        from 245deg,
+        var(--hud-rpm, var(--hud-accent, #d9f1ff)) 0deg var(--orbit-rpm-sweep, 0deg),
+        var(--hud-track, rgb(214 230 248 / 28%)) var(--orbit-rpm-sweep, 0deg) 200deg,
+        transparent 200deg
+    );
+    mask-image: radial-gradient(farthest-side, transparent 89%, #000 90% 94%, transparent 95%);
+}
+
+#hud[data-theme="orbit"] .gear {
+    grid-area: 1 / 3;
+    color: var(--hud-muted, #d1dfef);
+    font-size: 0;
+    text-shadow: 0 1px 4px #08121f;
+}
+
+#hud[data-theme="orbit"] #gear-value {
+    color: var(--hud-muted, #d1dfef);
+}
+
+#hud[data-theme="orbit"] .fuel {
+    position: relative;
+    grid-area: 1 / 1;
+    width: 100%;
+    aspect-ratio: 1;
+    padding: 0;
+}
+
+#hud[data-theme="orbit"] .fuel-label,
+#hud[data-theme="orbit"] #fuel-bar {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    clip-path: inset(50%);
+    overflow: hidden;
+}
+
+#hud[data-theme="orbit"] #fuel-dial {
+    display: grid;
+    position: relative;
+    place-items: center;
+}
+
+#hud[data-theme="orbit"] #fuel-dial::before {
+    content: '';
+    position: absolute;
+    inset: 3%;
+    border-radius: 50%;
+    background: conic-gradient(
+        from 180deg,
+        var(--orbit-fuel-color, var(--hud-fuel, var(--hud-accent, #d9f1ff))) 0deg var(--orbit-fuel-sweep, 0deg),
+        var(--hud-track, rgb(214 230 248 / 38%)) var(--orbit-fuel-sweep, 0deg) 180deg,
+        transparent 180deg
+    );
+    mask-image: radial-gradient(farthest-side, transparent 85%, #000 86% 93%, transparent 94%);
+}
+
+#hud[data-theme="orbit"] #fuel-bar.low + #fuel-dial {
+    --orbit-fuel-color: var(--hud-reserve, #ffae62);
+}
+
+#hud[data-theme="orbit"] .orbit-pump,
+#hud[data-theme="orbit"] .analog-fuel-mark {
+    display: block;
+    color: var(--hud-muted, #d9f1ff);
+}
+
+#hud[data-theme="orbit"] .analog-fuel-mark {
+    position: absolute;
+    left: 56%;
+    font-size: 10px;
+    font-weight: 800;
+    text-shadow: 0 1px 4px #08121f;
+}
+
+#hud[data-theme="orbit"] .analog-fuel-mark:first-child {
+    bottom: 3%;
+}
+
+#hud[data-theme="orbit"] .analog-fuel-mark:nth-child(2) {
+    top: 3%;
+}
+
+#hud[data-theme="orbit"] .lamps {
+    grid-row: 2;
+}
+
+.flight-readouts,
+#lamp-row[hidden] {
+    display: none;
+}
+
+#hud:is([data-theme="aircraft"], [data-theme="fighter_jet"]) {
+    --flight-accent: var(--hud-accent, #74c7ef);
+    --flight-ink: var(--hud-text, #edf8ff);
+    width: clamp(295px, 27vh, 415px);
+    padding: clamp(13px, 1.15vh, 19px);
+    border-color: var(--hud-border, #476379);
+    border-radius: 12px;
+    background: var(--hud-background, #102436d9);
+}
+
+#hud:is([data-theme="aircraft"], [data-theme="fighter_jet"]):not([hidden]) {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+    align-items: stretch;
+    gap: 10px 12px;
+}
+
+#hud:is([data-theme="aircraft"], [data-theme="fighter_jet"]) .speed {
+    grid-area: 1 / 1;
+    align-self: center;
+    flex-direction: column;
+    gap: 3px;
+    color: var(--hud-speed, var(--flight-ink));
+    font-size: clamp(29px, 3.8vh, 57px);
+    text-shadow: none;
+}
+
+#hud:is([data-theme="aircraft"], [data-theme="fighter_jet"]) .flight-readouts {
+    display: grid;
+    grid-area: 1 / 2;
+    gap: 5px;
+    padding: 7px 8px;
+    border-inline-start: 2px solid var(--flight-accent);
+    background: var(--hud-panel, rgb(9 21 32 / 53%));
+    color: var(--hud-muted, #9fbed2);
+    font-size: clamp(10px, 0.85vh, 13px);
+}
+
+.flight-readouts > div {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: baseline;
+    gap: 4px;
+}
+
+.flight-readouts strong {
+    color: var(--flight-ink);
+    font-size: 1.22em;
+    white-space: nowrap;
+}
+
+.flight-readouts > .aircraft-readout {
+    display: none;
+}
+
+#hud:is([data-theme="aircraft"], [data-theme="fighter_jet"]) .aircraft-readout {
+    display: grid;
+}
+
+#landing-gear-value[data-state="0"] {
+    color: #a5e4b8;
+}
+
+#landing-gear-value:is([data-state="1"], [data-state="3"]) {
+    color: #ffd58b;
+}
+
+#landing-gear-value[data-state="5"] {
+    color: #ff938b;
+}
+
+#hud:is([data-theme="aircraft"], [data-theme="fighter_jet"]) .tachometer,
+#hud:is([data-theme="aircraft"], [data-theme="fighter_jet"]) .fuel {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: end;
+    gap: 4px;
+}
+
+#hud:is([data-theme="aircraft"], [data-theme="fighter_jet"]) .tachometer {
+    grid-area: 2 / 1;
+    color: var(--hud-muted, #9fbed2);
+}
+
+#hud:is([data-theme="aircraft"], [data-theme="fighter_jet"]) .gear {
+    display: none;
+}
+
+#hud:is([data-theme="aircraft"], [data-theme="fighter_jet"]) #rpm-strip {
+    flex: none;
+    background:
+        linear-gradient(90deg, transparent var(--rpm-fill, 0%), var(--hud-track, #2a4355) 0),
+        linear-gradient(90deg, var(--hud-rpm, var(--flight-accent)) 75%, var(--hud-redline, #ff7663) 0);
+}
+
+#hud:is([data-theme="aircraft"], [data-theme="fighter_jet"]) .fuel {
+    grid-area: 2 / 2;
+    padding-bottom: 0;
+}
+
+#hud:is([data-theme="aircraft"], [data-theme="fighter_jet"]) progress:not(.low)::-webkit-progress-value {
+    background: var(--hud-fuel, var(--flight-accent));
+}
+
+#hud:is([data-theme="aircraft"], [data-theme="fighter_jet"]) .lamps {
+    grid-row: 3;
+    grid-auto-columns: 38px;
+}
+
+#hud:is([data-theme="aircraft"], [data-theme="fighter_jet"]) .lamp:not(#check-engine, #fuel-warning),
+#hud:is([data-theme="aircraft"], [data-theme="fighter_jet"]) .warning:not(.active) {
+    display: none;
+}
+
+#hud[data-theme="fighter_jet"] {
+    --flight-accent: var(--hud-accent, #95ffad);
+    --flight-ink: var(--hud-text, #c8ffce);
+    border-color: var(--hud-border, #487356);
+    border-radius: 2px;
+    background: var(--hud-background, rgb(6 19 12 / 78%));
+}
+
+#hud[data-theme="fighter_jet"] .speed {
+    text-shadow: 0 0 9px rgb(126 247 156 / 34%);
+}
+
+#hud[data-theme="fighter_jet"] .flight-readouts {
+    border-inline: 2px solid var(--flight-accent);
+    background: var(--hud-panel, rgb(13 36 20 / 55%));
+    color: var(--hud-muted, #a0cfa8);
+}
+
+#hud[data-theme="bicycle"] {
+    width: clamp(126px, 12vh, 182px);
+    padding: 8px;
+    border-color: var(--hud-border, #696d65);
+    border-radius: 14px;
+    background: var(--hud-background, rgb(24 26 23 / 91%));
+}
+
+#hud[data-theme="bicycle"]:not([hidden]) {
+    display: block;
+}
+
+#hud[data-theme="bicycle"] .speed {
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: 7px 9px;
+    border: 1px solid rgb(38 53 39 / 73%);
+    border-radius: 8px;
+    background: linear-gradient(155deg, var(--hud-dial-center, #b7c5a4), var(--hud-dial-edge, #8f9f80));
+    color: var(--hud-speed, var(--hud-text, #19271c));
+    font-size: clamp(28px, 3.15vh, 46px);
+    text-shadow: none;
+}
+
+#hud[data-theme="bicycle"] .unit {
+    color: var(--hud-muted, #35483a);
+}
+
+#hud[data-theme="bicycle"] .tachometer,
+#hud[data-theme="bicycle"] .fuel {
+    display: none;
+}
