@@ -1,60 +1,60 @@
 # DaVehicleHUD
 
-Eigenständiges Fahrzeug-HUD für FiveM mit 16 Designs für Autos, Motorräder, Fahrräder und Flugzeuge. Den Tank- oder Akkustand liest der Client über `Config.GetFuel`. Voreingestellt ist `myFuel`.
+Standalone vehicle HUD for FiveM with 16 designs for cars, motorcycles, bicycles, and aircraft. The client reads the fuel level or battery charge through `Config.GetFuel`. The default provider is `myFuel`.
 
 ## Installation
 
-Lege den Ordner `DaVehicleHUD` im Ressourcenverzeichnis ab. Starte deinen Tankanbieter vor DaVehicleHUD. Mit der Standardeinstellung sieht das in der `server.cfg` so aus.
+Place the `DaVehicleHUD` folder in your resources directory. Start your fuel provider before DaVehicleHUD. For the default setup, add the following to `server.cfg`.
 
 ```cfg
 ensure myFuel
 ensure DaVehicleHUD
 ```
 
-Wenn du einen anderen Anbieter nutzt, trage dessen Ressourcenname anstelle von `myFuel` ein und passe [den Tankanbieter](#tankanbieter) an.
+If you use another provider, replace `myFuel` with its resource name and update the [fuel provider](#fuel-provider) configuration.
 
-Mit `setr game_enableFlyThroughWindscreen true` in der `server.cfg` können unangeschnallte Insassen von der FiveM-Spielphysik durch die Windschutzscheibe geschleudert werden. Zusätzlich erkennt DaVehicleHUD harte Kollisionen und löst einen Rauswurf aus, falls die Spielfigur noch im Auto sitzt. Ein angelegter DaVehicleHUD-Gurt schützt vor beiden Effekten.
+Set `setr game_enableFlyThroughWindscreen true` in `server.cfg` to enable FiveM's built-in windscreen ejection for unbuckled occupants. DaVehicleHUD also detects hard collisions and ejects unbuckled occupants if they are still in the car. Fastening the DaVehicleHUD seat belt prevents both effects.
 
-Falls das eigene HUD von `myFuel` aktiv ist, kannst du es dort mit `Config.EnableUIHUD = false` ausblenden. Falls `esx_cruisecontrol` läuft, deaktiviere dort `Config.Seatbelt.Enable` und `Config.Cruise.Enable`, wenn du Gurt und Tempomat von DaVehicleHUD nutzt.
+If the built-in `myFuel` HUD is active, you can hide it by setting `Config.EnableUIHUD = false` in its configuration. If `esx_cruisecontrol` is running, disable its `Config.Seatbelt.Enable` and `Config.Cruise.Enable` settings when using DaVehicleHUD's seat belt and cruise control.
 
-Nach Änderungen an DaVehicleHUD genügt `restart DaVehicleHUD` in der Serverkonsole.
+After making changes, run `restart DaVehicleHUD` in the server console.
 
-## Grundeinstellungen
+## General settings
 
-Die Optionen stehen in [config.lua](config.lua).
+The options below are in [config.lua](config.lua).
 
-| Einstellung | Voreinstellung | Funktion |
+| Setting | Default | Description |
 | --- | --- | --- |
-| `Locale` | `'de'` | Sprache für HUD, Gurtmeldungen, Tastenbelegungen und Lichtdiagnose. `'de'` für Deutsch, `'en'` für Englisch. |
-| `SpeedUnit` | `'kmh'` | `'kmh'` für km/h oder `'mph'` für Meilen pro Stunde. Geschwindigkeitsringe und analoge Skalen passen sich an. Höhe und Vertikalgeschwindigkeit bleiben in m bzw. m/s. |
-| `GetFuel` | `myFuel` | Clientseitige Funktion für Tank- oder Akkustand. Siehe [Tankanbieter](#tankanbieter). |
-| `Keybinds` | Siehe [Tasten und Befehle](#tasten-und-befehle) | Standard-Tastenbelegung für Blinker, Warnblinker, Gurt und Tempomat. |
-| `IndicatorSoundVolume` | `0.3` | Lautstärke des Blinkerklicks von `0` (stumm) bis `1` (laut). Der Klick läuft nur bei im HUD angezeigten Blinkern. |
-| `FuelWarningSoundVolume` | `0.3` | Lautstärke der kurzen Signaltöne bei sichtbarer Tank- oder Akkuwarnung. `0` schaltet den Ton aus. |
-| `FuelWarningSoundSeconds` | `5` | Gesamtdauer der Tonfolge in Sekunden. Mit `0` bleibt sie stumm. |
-| `FuelWarningIntervalSeconds` | `0.8` | Abstand zwischen zwei Tönen in Sekunden. Kleinster Abstand ist `0.25`. |
-| `SeatbeltWarningSeconds` | `30` | Maximale Dauer des Gurtwarntons pro unangeschnallter Phase, in Sekunden. Mit `0` bleibt er stumm. |
-| `SeatbeltWarningVolume` | `0.55` | Lautstärke des Gurtwarntons von `0` (stumm) bis `1` (laut). |
-| `SeatbeltCrashEjection` | `true` | Zusätzlicher Rauswurf bei einem harten Aufprall ohne Gurt. `false` deaktiviert diese Crash-Erkennung. |
-| `SeatbeltCrashMinSpeedKmh` | `80` | Mindesttempo vor dem Aufprall für die zusätzliche Crash-Erkennung. |
-| `SeatbeltCrashMinSpeedLossKmh` | `35` | Mindesttempoverlust innerhalb kurzer Zeit bei einer Kollision. Beide Crash-Grenzwerte sind immer in km/h. |
-| `CruiseControl.Enabled` | `true` | Aktiviert den Tempomaten für Autos und Motorräder. |
-| `Theme` | `'orbit'` | Standarddesign, falls weder Modell, Fahrzeugklasse noch Fahrzeugtyp ein eigenes Design vorgeben. |
-| `MotorcycleTheme` | `'motorcycle'` | Standarddesign für Motorräder. Mit `false` gilt `Theme`. |
-| `AircraftTheme` | `'aircraft'` | Standarddesign für Flugzeuge und Helikopter. Mit `false` gilt `Theme`. |
-| `BicycleTheme` | `'bicycle'` | Standarddesign für Fahrräder. Mit `false` gilt `Theme`. Die Kontrollleuchten bleiben bei Fahrrädern ausgeblendet. |
+| `Locale` | `'de'` | Language for the HUD, seat belt messages, key bindings, and headlight diagnostics. Use `'de'` for German or `'en'` for English. |
+| `SpeedUnit` | `'kmh'` | Use `'kmh'` for km/h or `'mph'` for miles per hour. Speed rings and analog scales adjust to the selected unit. Altitude and vertical speed still use m and m/s. |
+| `GetFuel` | `myFuel` | Client-side function that returns the fuel level or battery charge. See [Fuel provider](#fuel-provider). |
+| `Keybinds` | See [Key bindings and commands](#key-bindings-and-commands) | Default keys for the turn signals, hazard lights, seat belt, and cruise control. |
+| `IndicatorSoundVolume` | `0.3` | Turn signal click volume from `0` (muted) to `1` (full volume). It plays only when the turn signals are shown in the HUD. |
+| `FuelWarningSoundVolume` | `0.3` | Volume of the short beeps while the low fuel or low battery warning is visible. Set to `0` to mute them. |
+| `FuelWarningSoundSeconds` | `5` | Total duration of the beep sequence, in seconds. Set to `0` to mute it. |
+| `FuelWarningIntervalSeconds` | `0.8` | Time between beeps, in seconds. The minimum is `0.25`. |
+| `SeatbeltWarningSeconds` | `30` | Maximum duration of the warning sound each time you are unbuckled, in seconds. Set to `0` to mute it. |
+| `SeatbeltWarningVolume` | `0.55` | Seat belt warning volume from `0` (muted) to `1` (full volume). |
+| `SeatbeltCrashEjection` | `true` | Adds scripted ejection for unbuckled occupants in hard collisions. Set to `false` to disable this crash detection. |
+| `SeatbeltCrashMinSpeedKmh` | `80` | Minimum speed before impact for scripted ejection. |
+| `SeatbeltCrashMinSpeedLossKmh` | `35` | Minimum speed lost in a short time during a collision. Both crash thresholds are always in km/h. |
+| `CruiseControl.Enabled` | `true` | Enables cruise control for cars and motorcycles. |
+| `Theme` | `'orbit'` | Fallback theme when no model, vehicle class, or vehicle type sets one. |
+| `MotorcycleTheme` | `'motorcycle'` | Default theme for motorcycles. Set to `false` to fall back to `Theme`. |
+| `AircraftTheme` | `'aircraft'` | Default theme for airplanes and helicopters. Set to `false` to fall back to `Theme`. |
+| `BicycleTheme` | `'bicycle'` | Default theme for bicycles. Set to `false` to fall back to `Theme`. Warning lamps stay hidden on bicycles. |
 
-## Tankanbieter
+## Fuel provider
 
-Ersetze für einen anderen Anbieter die Funktion `Config.GetFuel` in [config.lua](config.lua). Sie bekommt das aktuelle Fahrzeug als FiveM-Entity-Handle und optional das gewählte HUD-Design als zweiten Parameter. Verwende einen **clientseitigen** Export oder eine andere clientseitig verfügbare Datenquelle.
+To use a different provider, replace `Config.GetFuel` in [config.lua](config.lua). It receives the current vehicle as a FiveM entity handle. The second argument is the selected HUD theme, which your function can ignore if it does not need it. Use a **client-side** export or another data source available on the client.
 
-| Rückgabewert | Bedeutung |
+| Return value | Description |
 | --- | --- |
-| Erster Wert | Tank- oder Akkustand in Prozent von `0` bis `100`. Numerische Werte außerhalb des Bereichs werden begrenzt. Gib `nil` zurück, wenn zurzeit kein Wert verfügbar ist. |
-| Zweiter Wert, optional | `true` zeigt im Design `electric` die Beschriftung **Akku** an. |
-| Dritter Wert, optional | `true` aktiviert die Motorkontrollleuchte wegen eines vom Anbieter gemeldeten Kraftstoffdefekts. |
+| First value | Fuel level or battery charge as a percentage from `0` to `100`. Values outside that range are clamped. Return `nil` when a reading is unavailable. |
+| Second value, optional | Return `true` to show **Battery** in the `electric` theme. |
+| Third value, optional | Return `true` to turn on the check-engine lamp when the provider reports a fuel system fault. |
 
-Beispiel mit dem clientseitigen Export von LegacyFuel. Verwende im Export und in der `server.cfg` den tatsächlichen Ressourcennamen deines Servers. [LegacyFuel-Exporte](https://github.com/InZidiuZ/LegacyFuel#exports)
+This example uses the LegacyFuel client export. Use the actual resource name from your server in both the export call and `server.cfg`. [LegacyFuel exports](https://github.com/InZidiuZ/LegacyFuel#exports)
 
 ```lua
 Config.GetFuel = function(vehicle)
@@ -64,17 +64,17 @@ Config.GetFuel = function(vehicle)
 end
 ```
 
-Für dieses Beispiel startet die `server.cfg` zuerst `ensure LegacyFuel` und dann `ensure DaVehicleHUD`. Wenn der Anbieter keinen Wert liefert oder der Aufruf fehlschlägt, zeigt der Tankwert einen Strich. Die übrigen HUD-Funktionen bleiben verfügbar. Der voreingestellte `myFuel`-Anbieter liefert zusätzlich die Akkubeschriftung und den Status für einen Motorausfall nach Falschbetankung.
+For this example, run `ensure LegacyFuel` before `ensure DaVehicleHUD` in `server.cfg`. If the provider returns no value or the call fails, the fuel readout shows a dash. The rest of the HUD remains available. The default `myFuel` provider also supplies the battery label and reports engine failures caused by putting the wrong fuel in the vehicle.
 
-## Design nach Fahrzeugklasse
+## Themes by vehicle class
 
-Die Tabelle `Config.VehicleClassThemes` in [config.vehicle.lua](config.vehicle.lua) legt das Standard-HUD für alle 23 GTA-Fahrzeugklassen fest. Zum Beispiel ist Klasse `4` für Muscle Cars auf `analog` eingestellt, Klasse `6` für Sportwagen auf `orbit` und Klasse `7` für Supersportwagen auf `supercar`. Die IDs stehen als Kommentar in der Datei. [FiveM-Fahrzeugklassen](https://github.com/citizenfx/natives/blob/master/VEHICLE/GetVehicleClass.md)
+The `Config.VehicleClassThemes` table in [config.vehicle.lua](config.vehicle.lua) sets a default HUD for all 23 GTA vehicle classes. For example, class `4` (muscle cars) uses `analog`, class `6` (sports cars) uses `orbit`, and class `7` (supercars) uses `supercar`. The class names are listed in the comments. [FiveM vehicle classes](https://github.com/citizenfx/natives/blob/master/VEHICLE/GetVehicleClass.md)
 
-Die Klassen für Motorräder, Fahrräder, Helikopter und Flugzeuge übernehmen standardmäßig die entsprechenden Einstellungen aus `config.lua`. Mit `false` oder einem fehlenden Eintrag wird für die Klasse kein eigenes Design erzwungen. Die Reihenfolge lautet **Modell → Fahrzeugklasse → Fahrzeugtyp → Standarddesign**.
+The motorcycle, bicycle, helicopter, and airplane classes use the corresponding values from `config.lua` by default. Set a class entry to `false` or omit it to skip that class override. The selection order is **model → vehicle class → vehicle type → fallback theme**.
 
-## Ein Design pro Fahrzeug
+## Themes by vehicle model
 
-Für einzelne Ausnahmen steht in [config.vehicle.lua](config.vehicle.lua) links der **Spawnname** und rechts das **Design**. Ein gültiger Eintrag hat Vorrang vor der Fahrzeugklasse. Füge die gewünschten Zeilen zur vorhandenen Tabelle `Config.VehicleThemes` hinzu oder ändere bestehende Einträge.
+For individual overrides in [config.vehicle.lua](config.vehicle.lua), use the **spawn name** as the key and the **theme** as the value. A valid model entry takes precedence over the vehicle class. Add or edit entries inside the existing `Config.VehicleThemes` table.
 
 ```lua
 adder = 'supercar',
@@ -82,20 +82,20 @@ jester = 'orbit',
 ['mein-addon-auto'] = 'dual_round',
 ```
 
-Die Datei enthält bereits Zuordnungen für mehrere Serienfahrzeuge. `hydra`, `lazer`, `molotok`, `raiju` und `strikeforce` verwenden `fighter_jet`. Zum Testen kannst du als ESX-Admin beispielsweise `/car adder`, `/car raiju` oder `/car bmx` im Chat eingeben.
+The file already includes assignments for several stock vehicles. The `hydra`, `lazer`, `molotok`, `raiju`, and `strikeforce` use `fighter_jet`. As an ESX admin, you can use `/car adder`, `/car raiju`, or `/car bmx` in chat to test them.
 
-## Farben und Transparenz
+## Colors and transparency
 
-Alle Designs haben einen eigenen Block in [config.colors.lua](config.colors.lua). Werte sind Hexfarben wie `#68bbff`. Für Transparenz kannst du zwei Stellen für den Alphakanal anhängen, etwa `#10243680` für ungefähr 50 % Deckkraft.
+Each design has its own block in [config.colors.lua](config.colors.lua). Use hex colors such as `#68bbff`. To control transparency, append two digits for the alpha channel. For example, `#10243680` is approximately 50% opaque.
 
-Die Farbwerte werden in dieser Reihenfolge angewendet:
+Colors are applied in the following order, with later entries taking precedence.
 
-1. Standardfarben des Designs.
-2. `round` für `single_round` und `dual_round`.
-3. `all` für gemeinsame Anpassungen aller Designs.
-4. Der Block des gewählten Designs, etwa `orbit`.
+1. The theme's built-in defaults.
+2. The `round` block for `single_round` and `dual_round`.
+3. The `all` block for settings shared across all themes.
+4. The selected theme's block, such as `orbit`.
 
-Beispiel für den vorhandenen `orbit`-Block:
+Here is an example for the existing `orbit` block.
 
 ```lua
 orbit = {
@@ -105,93 +105,93 @@ orbit = {
 },
 ```
 
-| Farboption | Funktion |
+| Color option | Description |
 | --- | --- |
-| `accent` | Grundfarbe für Instrumente, sofern keine speziellere Farbe gesetzt ist. |
-| `speed`, `rpm`, `fuel` | Farbe der jeweiligen Geschwindigkeits-, Drehzahl- oder Füllstandsanzeige. |
-| `redline`, `reserve` | Drehzahlbereich am oberen Ende und Füllstandsanzeige bei Reserve. |
-| `needle`, `gear` | Zeigerfarbe und Farbe der Ganganzeige. |
-| `text`, `muted` | Haupttext und weniger hervorgehobene Beschriftung. |
-| `track`, `ticks`, `border` | Ungefüllte Balken oder Ringe, Skalenstriche und Rahmen. |
-| `background`, `backgroundEdge` | Gehäusehintergrund und zweite Farbe eines Hintergrundverlaufs. |
-| `dialCenter`, `dialEdge`, `panel` | Zifferblattmitte, Zifferblattrand und Nebenflächen. |
+| `accent` | Base instrument color when a more specific color is unavailable. |
+| `speed`, `rpm`, `fuel` | Speed, engine speed, and fuel or battery gauge colors. |
+| `redline`, `reserve` | Upper RPM range and low fuel or low battery indicator colors. |
+| `needle`, `gear` | Gauge needle and gear display colors. |
+| `text`, `muted` | Primary text and secondary label colors. |
+| `track`, `ticks`, `border` | Unfilled bars or rings, scale marks, and borders. |
+| `background`, `backgroundEdge` | Housing background and gradient edge color. |
+| `dialCenter`, `dialEdge`, `panel` | Dial center, dial edge, and secondary panels. |
 
-Welche Farboption sichtbar greift, hängt von den Instrumenten des Designs ab. Der Fahrradtacho hat zum Beispiel weder Drehzahl- noch Tankanzeige.
+The available color options depend on the instruments in the selected theme. The bicycle HUD, for example, has only a speed display.
 
-## Tasten und Befehle
+## Key bindings and commands
 
-| Einstellung in `Config.Keybinds` | Standardtaste | Funktion | F8-Befehl |
+| Setting in `Config.Keybinds` | Default key | Action | F8 command |
 | --- | --- | --- | --- |
-| `LeftSignal` | **←** (`'LEFT'`) | Linken Blinker umschalten | `davehiclehud_left` |
-| `RightSignal` | **→** (`'RIGHT'`) | Rechten Blinker umschalten | `davehiclehud_right` |
-| `Hazard` | **↑** (`'UP'`) | Warnblinker umschalten | `davehiclehud_hazard` |
-| `Seatbelt` | **B** (`'B'`) | Gurt anlegen oder lösen, auch auf dem Beifahrersitz | `davehiclehud_seatbelt` |
-| `CruiseControl` | **Feststelltaste** (`'CAPITAL'`) | Aktuelles Tempo als Solltempo übernehmen oder den Tempomaten ausschalten | `davehiclehud_cruise` |
+| `LeftSignal` | **←** (`'LEFT'`) | Toggle the left turn signal | `davehiclehud_left` |
+| `RightSignal` | **→** (`'RIGHT'`) | Toggle the right turn signal | `davehiclehud_right` |
+| `Hazard` | **↑** (`'UP'`) | Toggle the hazard lights | `davehiclehud_hazard` |
+| `Seatbelt` | **B** (`'B'`) | Fasten or unfasten the seat belt, including in a passenger seat | `davehiclehud_seatbelt` |
+| `CruiseControl` | **Caps Lock** (`'CAPITAL'`) | Set cruise control to the current speed or switch it off | `davehiclehud_cruise` |
 
-In [config.lua](config.lua) kannst du die Standardtasten ändern, etwa mit `Seatbelt = 'K'`. Mit `false` wird für den betreffenden Befehl keine Tastenzuordnung registriert. Der F8-Befehl bleibt verfügbar. Bereits gespeicherte persönliche Belegungen kannst du in den **FiveM-Tastenbelegungen** ändern. Die frühere Tempomat-Option `Config.CruiseControl.Key` gilt weiter als Vorgabe, falls `Keybinds.CruiseControl` fehlt.
+Change the default keys in [config.lua](config.lua), for example with `Seatbelt = 'K'`. Set an entry to `false` to skip registering its key binding. The F8 command remains available. Change any previously saved personal bindings in **FiveM's key binding settings**. The former `Config.CruiseControl.Key` option still supplies the default when `Keybinds.CruiseControl` is absent.
 
-Mit angelegtem Gurt ist der normale Ausstieg gesperrt. Der Gurt wird bei einem kurzen Resource-Neustart im selben Auto wiederhergestellt und beim Aussteigen oder Löschen des Fahrzeugs zurückgesetzt.
+Fastening the seat belt blocks the normal vehicle exit. The seat belt state is restored after a brief resource restart if you stay in the same car. It resets when you leave the car or the car is deleted.
 
-Der Tempomat dosiert das Gas und zeigt bei Aktivierung das Solltempo an. Bei Gefälle kann das Fahrzeug schneller rollen. Bremse, Handbremse, ein starker Crash oder ein Fahrzeugwechsel schalten den Tempomaten aus.
+Cruise control adjusts the throttle and shows the target speed when you activate it. The vehicle can coast above the target downhill. Applying the brake or handbrake, a hard crash, or switching vehicles cancels cruise control.
 
-Der Blinkerklick läuft im Takt der HUD-Pfeile. Beim Warnblinker blinken beide Pfeile gemeinsam und teilen sich denselben Klick.
+The turn signal click follows the HUD arrows. With the hazard lights on, both arrows flash together and share one click.
 
-Der Gurtwarnton wiederholt sich bei sichtbarer Gurtwarnung bis zur eingestellten Dauer. Anschnallen beendet den Ton sofort. Beim erneuten Abschnallen beginnt ein neuer Zeitraum.
+The seat belt warning repeats while its lamp is visible, up to the configured duration. Fastening the belt stops the sound immediately. Unfastening it starts a new warning period.
 
-Der Gurtwarnton `seatbelt-warning.mp3` stammt aus `esx_hud` (`SeatbeltAlertSound.mp3`, Copyright © 2025 ESX-Framework) und ist unter GPL-3.0 oder neuer lizenziert. Die [Lizenz](html/audio/LICENSE-GPL-3.0.txt) liegt beim Sample.
+The `seatbelt-warning.mp3` sample comes from `esx_hud` (`SeatbeltAlertSound.mp3`, Copyright © 2025 ESX-Framework) and is licensed under GPL-3.0 or later. The [license](html/audio/LICENSE-GPL-3.0.txt) is included with the sample.
 
-**H** schaltet standardmäßig die Fahrzeugscheinwerfer. **G** fährt das Fahrwerk eines Flugzeugs mit einziehbarem Fahrwerk ein oder aus. **E** schaltet bei GTA-Einsatzfahrzeugen standardmäßig die Sirene. Diese Belegungen kommen aus den GTA-Steuerungseinstellungen.
+By default, **H** toggles vehicle headlights, **G** raises or lowers retractable landing gear, and **E** toggles the siren in GTA emergency vehicles. You can change these keys in GTA's control settings.
 
-Der F8-Befehl `davehiclehud_lightdebug` protokolliert 12 Sekunden lang die Lichtzustände des aktuellen Fahrzeugs. Mit `davehiclehud_lightdebug night` wird während des Tests zusätzlich die lokale Spielzeit vorübergehend auf 23:00 Uhr gesetzt.
+The F8 command `davehiclehud_lightdebug` logs the current vehicle's light states for 12 seconds. Use `davehiclehud_lightdebug night` to temporarily set your local in-game time to 23:00 during the test.
 
-## Die 16 Designs
+## The 16 designs
 
-Die Vorschauen zeigen die HUD-Oberfläche mit simulierten Fahrzeugwerten vor einem neutralen Testhintergrund.
+The previews show the HUD with simulated vehicle data against a neutral test background. The screenshots use German HUD labels.
 
-### Arcade und Rundinstrumente
+### Arcade and round gauges
 
-![HUD-Vorschauen für arcane, digital, single_round und dual_round](docs/hud-arcade-round.png)
+![HUD previews for arcane, digital, single_round, and dual_round](docs/hud-arcade-round.png)
 
-| Design | Merkmale | Beispiel |
+| Design | Features | Example |
 | --- | --- | --- |
-| `arcane` | Bernsteinfarbene Ziffern und segmentierter Drehzahlbalken | Futo (`futo`) |
-| `digital` | Flaches, blau-graues Display mit durchgehender Drehzahlleiste | Streifenwagen (`police`) |
-| `single_round` | Ein großer Rundtacho mit Tank im Zifferblatt | Banshee (`banshee`) |
-| `dual_round` | Großer Rundtacho und zwei kleine Rundinstrumente für Drehzahl und Tank | Comet (`comet2`) |
+| `arcane` | Amber digits and a segmented RPM bar | Futo (`futo`) |
+| `digital` | Flat blue-gray display with a continuous RPM bar | Police Cruiser (`police`) |
+| `single_round` | One large round speedometer with a fuel gauge inside the dial | Banshee (`banshee`) |
+| `dual_round` | Large round speedometer with two smaller dials for RPM and fuel | Comet (`comet2`) |
 
-### Sportwagen und Elektrofahrzeuge
+### Sports cars and electric vehicles
 
-![HUD-Vorschauen für supercar, supercar2, supercar3 und electric](docs/hud-sport-electric.png)
+![HUD previews for supercar, supercar2, supercar3, and electric](docs/hud-sport-electric.png)
 
-| Design | Merkmale | Beispiel |
+| Design | Features | Example |
 | --- | --- | --- |
-| `supercar` | Kantiges Display mit gelbem Drehzahlbalken | Adder (`adder`) |
-| `supercar2` | Breiter Drehzahlbogen mit zentraler Gangzahl | Zentorno (`zentorno`) |
-| `supercar3` | Runder Drehzahlmesser mit rotem Zeiger und cyanfarbenem Ring | Tempesta (`tempesta`) |
-| `electric` | Flaches Display mit vertikaler Drehzahl- und Akku- oder Tankanzeige | Raiden (`raiden`) |
+| `supercar` | Angular display with a yellow RPM bar | Adder (`adder`) |
+| `supercar2` | Wide RPM arc with a central gear display | Zentorno (`zentorno`) |
+| `supercar3` | Round tachometer with a red needle and a cyan ring | Tempesta (`tempesta`) |
+| `electric` | Flat display with vertical RPM and battery or fuel bars | Raiden (`raiden`) |
 
-### Tourenwagen und Klassiker
+### Touring and classic designs
 
-![HUD-Vorschauen für touring, analog, vintage und orbit](docs/hud-touring-classic.png)
+![HUD previews for touring, analog, vintage, and orbit](docs/hud-touring-classic.png)
 
-| Design | Merkmale | Beispiel |
+| Design | Features | Example |
 | --- | --- | --- |
-| `touring` | Tacho in der Mitte, Drehzahl links und Tank rechts | Dilettante (`dilettante`) |
-| `analog` | Drei Zeigerinstrumente für Tempo, Drehzahl und Tank | Sultan (`sultan`) |
-| `vintage` | Grüne Zifferblätter mit orangefarbenen Skalen und Zeigern | Tornado (`tornado`) |
-| `orbit` | Transparente Geschwindigkeits- und Drehzahlringe mit E/F-Tankanzeige | Jester (`jester`), über die Sportwagenklasse |
+| `touring` | Speedometer in the center, RPM on the left, and fuel on the right | Dilettante (`dilettante`) |
+| `analog` | Three traditional needles for speed, RPM, and fuel | Sultan (`sultan`) |
+| `vintage` | Green dials with orange-lit scales and needles | Tornado (`tornado`) |
+| `orbit` | Transparent speed and RPM rings with an E/F fuel gauge | Jester (`jester`), through the sports car class |
 
-### Zweiräder und Flugzeuge
+### Two-wheelers and aircraft
 
-![HUD-Vorschauen für motorcycle, aircraft, fighter_jet und bicycle](docs/hud-bike-flight.png)
+![HUD previews for motorcycle, aircraft, fighter_jet, and bicycle](docs/hud-bike-flight.png)
 
-| Design | Merkmale | Beispiel |
+| Design | Features | Example |
 | --- | --- | --- |
-| `motorcycle` | Kompaktes Display mit Tempo, Drehzahl, Gang und Tank | Bati 801 (`bati`) |
-| `aircraft` | Tempo, Höhe über Grund, Vertikalgeschwindigkeit, Kurs und Fahrwerkstatus | Dodo (`dodo`) |
-| `fighter_jet` | Flugwerte im grünen Cockpitstil | F-160 Raiju (`raiju`) |
-| `bicycle` | LCD-Fahrradtacho mit Tempo und ohne Kontrollleuchten | BMX (`bmx`) |
+| `motorcycle` | Compact speed, RPM, gear, and fuel display | Bati 801 (`bati`) |
+| `aircraft` | Speed, height above ground, vertical speed, heading, and landing gear status | Dodo (`dodo`) |
+| `fighter_jet` | Flight data in a green cockpit-style display | F-160 Raiju (`raiju`) |
+| `bicycle` | LCD-style speedometer with no warning lamps | BMX (`bmx`) |
 
-### Kontrollleuchten
+### Indicator and warning lamps
 
-Die Fahrzeug-HUDs zeigen Blinker, Scheinwerfer, Gurtwarnung und je nach Fahrzeug eine Sirenenanzeige. Die Reservewarnung greift unter **15 %**. Beim Aufleuchten startet einmal eine Folge kurzer Pieptöne. Nach dem Auffüllen auf mindestens 15 % ist die Tonfolge für die nächste Reservewarnung wieder aktiv. Die Motorwarnung reagiert auf Motorschaden und auf einen vom Tankanbieter gemeldeten Kraftstoffdefekt. Bei Flugzeugen erscheint die Leuchtenreihe nur bei aktiver Tank- oder Motorwarnung.
+Vehicle HUDs show turn signals, headlight status, a seat belt warning, and a siren indicator where applicable. The low fuel or low battery warning comes on below **15%** and starts one sequence of short beeps. Refilling or recharging to at least 15% resets the sound for the next warning. The check-engine lamp reacts to engine damage and fuel system faults reported by the fuel provider. On aircraft, the warning row appears only when a fuel or engine warning is active.
